@@ -60,7 +60,22 @@
             <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
+
+        <!--JSTL-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <!--JSP tags for LocalDateTime-->
+        <dependency>
+            <groupId>net.sargue</groupId>
+            <artifactId>java-time-jsptags</artifactId>
+            <version>1.1.4</version>
+        </dependency>
     </dependencies>
+
 
     <profiles>
     </profiles>
