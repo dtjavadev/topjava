@@ -6,11 +6,11 @@
 <head>
     <title>Show All Meals</title>
     <style>
-        .green {
+        .normal {
             color: green
         }
 
-        .red {
+        .excess {
             color: red
         }
     </style>
@@ -31,12 +31,13 @@
     </thead>
     <tbody>
     <c:forEach items="${meals}" var="meal">
-        <tr class="${meal.excess ? 'red':'green'}">
+        <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
+        <tr class="${meal.excess ? 'excess' : 'normal'}">
             <td><javatime:format value="${meal.dateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-            <td><c:out value="${meal.description}"/></td>
-            <td><c:out value="${meal.calories}"/></td>
-            <td><a href="meals?action=edit&mealId=<c:out value="${meal.id}"/>">Edit</a></td>
-            <td><a href="meals?action=delete&mealId=<c:out value="${meal.id}"/>">Delete</a></td>
+            <td>${meal.description}</td>
+            <td>${meal.calories}</td>
+            <td><a href="meals?action=edit&mealId=${meal.id}">Edit</a></td>
+            <td><a href="meals?action=delete&mealId=${meal.id}">Delete</a></td>
         </tr>
     </c:forEach>
     </tbody>
