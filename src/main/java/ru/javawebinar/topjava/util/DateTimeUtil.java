@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.util;
 
 import org.springframework.lang.Nullable;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,7 +12,18 @@ public class DateTimeUtil {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public static <T extends Comparable<T>> boolean isBetweenHalfOpen(T lt, @Nullable T start, @Nullable T end) {
+        if (lt instanceof LocalDate) {
+            return (start == null || lt.compareTo(start) >= 0) && (end == null || lt.compareTo(end) <= 0);
+        }
         return (start == null || lt.compareTo(start) >= 0) && (end == null || lt.compareTo(end) < 0);
+    }
+
+    public static LocalDate parseLocalDate(@Nullable String string) {
+        return StringUtils.hasLength(string) ? LocalDate.parse(string) : null;
+    }
+
+    public static LocalTime parseLocalTime(@Nullable String string) {
+        return StringUtils.hasLength(string) ? LocalTime.parse(string) : null;
     }
 
     public static String toString(LocalDateTime ldt) {

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,17 +25,18 @@ public class InMemoryMealRepository implements MealRepository {
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.meals.forEach(meal -> save(meal, SecurityUtil.authUserId()));
+        MealsUtil.meals.forEach(meal -> save(meal, 1));
+        repository.values().forEach(meal -> meal.setUserId(1));
     }
 
     @Override
     public Meal save(Meal meal, Integer userId) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            meal.setUserId(userId);
             repository.put(meal.getId(), meal);
             return meal;
         }
+
         if (!meal.getUserId().equals(userId)) {
             return null;
         }
@@ -60,14 +62,20 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public Collection<Meal> getAll() {
-        return repository.values().stream().sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
+    public Collection<Meal> getAll(Integer userId) {
+        return repository.values().stream().filter(meal -> meal.getUserId().equals(userId)).sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
     }
 
     @Override
-    public Collection<MealTo> getFiltered(LocalDateTime start, LocalDateTime end) {
-        return MealsUtil.filterByPredicate(repository.values(), MealsUtil.DEFAULT_CALORIES_PER_DAY,
-                meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDateTime(), start, end));
+    public Collection<MealTo> getFiltered(Integer userId, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+        List<Meal> filteredMeal = repository.values().stream()
+                .filter(meal -> meal.getUserId().equals(userId))
+                .filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalDate(), startDate, endDate))
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList());
+
+        return MealsUtil.filterByPredicate(filteredMeal, MealsUtil.DEFAULT_CALORIES_PER_DAY,
+                meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime));
     }
 }
 

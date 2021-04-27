@@ -20,11 +20,6 @@ public class InMemoryUserRepository implements UserRepository {
     private final Map<Integer, User> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
-    {
-        repository.put(counter.incrementAndGet(), new User(SecurityUtil.authUserId(), "admin", "mail@mail.ru", "admin", Role.ADMIN));
-        repository.put(counter.incrementAndGet(), new User(SecurityUtil.authUserId(), "user", "mail@google.com", "user", Role.USER));
-    }
-
     @Override
     public boolean delete(int id) {
         log.info("delete {}", id);
@@ -53,7 +48,7 @@ public class InMemoryUserRepository implements UserRepository {
     public List<User> getAll() {
         log.info("getAll");
         return repository.values().stream()
-                .sorted(Comparator.comparing(User::getName))
+                .sorted(Comparator.comparing(User::getName).thenComparing(User::getEmail))
                 .collect(Collectors.toList());
     }
 

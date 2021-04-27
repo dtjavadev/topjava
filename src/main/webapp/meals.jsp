@@ -21,25 +21,26 @@
     <h3><a href="index.html">Home</a></h3>
     <hr/>
     <h2>Meals</h2>
-    <form method="post">
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
-        <tr>
-            <th>От даты (включая)</th>
-            <th>До даты (включая)</th>
-            <th>От времени (включая)</th>
-            <th>До времени (исключая)</th>
-        </tr>
-        </thead>
-        <tr>
-            <th><input type="date" name="startDate" required></th>
-            <th><input type="date" name="endDate" required></th>
-            <th><input type="time" name="startTime" required></th>
-            <th><input type="time" name="endTime" required></th>
-        </tr>
-    </table>
+    <form method="get" action="meals">
+        <input type="hidden" name="action" value="filter">
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+            <tr>
+                <th>От даты (включая)</th>
+                <th>До даты (включая)</th>
+                <th>От времени (включая)</th>
+                <th>До времени (исключая)</th>
+            </tr>
+            </thead>
+            <tr>
+                <th><input type="date" name="startDate"></th>
+                <th><input type="date" name="endDate"></th>
+                <th><input type="time" name="startTime"></th>
+                <th><input type="time" name="endTime"></th>
+            </tr>
+        </table>
         <br>
-        <a href="meals?action=filter">Filter Meal</a>
+        <button type="submit">Filter</button>
         <br><br>
     </form>
     <a href="meals?action=create">Add Meal</a>

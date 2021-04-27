@@ -19,7 +19,7 @@ public interface MealRepository {
     Meal get(int id, Integer userId);
 
     // ORDERED dateTime desc
-    Collection<Meal> getAll();
+    Collection<Meal> getAll(Integer userId);
 
-    Collection<MealTo> getFiltered(LocalDateTime start, LocalDateTime end);
+    Collection<MealTo> getFiltered(Integer userId, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime);
 }
