@@ -43,7 +43,7 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
 
-        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id), SecurityUtil.authUserId(),
+        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
@@ -51,9 +51,9 @@ public class MealServlet extends HttpServlet {
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
 
         if (meal.isNew()) {
-            mealRestController.create(meal, SecurityUtil.authUserId());
+            mealRestController.create(meal);
         } else {
-            mealRestController.update(meal, meal.getId(), SecurityUtil.authUserId());
+            mealRestController.update(meal, meal.getId());
         }
         response.sendRedirect("meals");
     }
@@ -66,7 +66,7 @@ public class MealServlet extends HttpServlet {
             case "delete":
                 int id = getId(request);
                 log.info("Delete {}", id);
-                mealRestController.delete(id, SecurityUtil.authUserId());
+                mealRestController.delete(id);
                 response.sendRedirect("meals");
                 break;
             case "filter":
@@ -75,7 +75,7 @@ public class MealServlet extends HttpServlet {
                 LocalDate endDate = DateTimeUtil.parseLocalDate(request.getParameter("endDate"));
                 LocalTime startTime = DateTimeUtil.parseLocalTime(request.getParameter("startTime"));
                 LocalTime endTime = DateTimeUtil.parseLocalTime(request.getParameter("endTime"));
-                request.setAttribute("meals", mealRestController.filter(SecurityUtil.authUserId(), startDate, startTime, endDate, endTime));
+                request.setAttribute("meals", mealRestController.filter(startDate, startTime, endDate, endTime));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
 
@@ -83,15 +83,14 @@ public class MealServlet extends HttpServlet {
             case "update":
                 final Meal meal = "create".equals(action) ?
                         new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-                        mealRestController.get(getId(request), SecurityUtil.authUserId());
+                        mealRestController.get(getId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
             case "all":
             default:
                 log.info("getAll");
-                request.setAttribute("meals",
-                        MealsUtil.getTos(mealRestController.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                request.setAttribute("meals", mealRestController.getAll());
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }

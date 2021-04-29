@@ -11,10 +11,11 @@ import java.time.format.DateTimeFormatter;
 public class DateTimeUtil {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public static <T extends Comparable<T>> boolean isBetweenHalfOpen(T lt, @Nullable T start, @Nullable T end) {
-        if (lt instanceof LocalDate) {
-            return (start == null || lt.compareTo(start) >= 0) && (end == null || lt.compareTo(end) <= 0);
-        }
+    public static boolean isBetweenDate(LocalDate ld, @Nullable LocalDate start, @Nullable LocalDate end) {
+        return (start == null || ld.compareTo(start) >= 0) && (end == null || ld.compareTo(end) <= 0);
+    }
+
+    public static boolean isBetweenTime(LocalTime lt, @Nullable LocalTime start, @Nullable LocalTime end) {
         return (start == null || lt.compareTo(start) >= 0) && (end == null || lt.compareTo(end) < 0);
     }
 

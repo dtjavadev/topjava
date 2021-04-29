@@ -33,10 +33,10 @@
             </tr>
             </thead>
             <tr>
-                <th><input type="date" name="startDate"></th>
-                <th><input type="date" name="endDate"></th>
-                <th><input type="time" name="startTime"></th>
-                <th><input type="time" name="endTime"></th>
+                <th><input type="date" name="startDate" value="${param.startDate}"></th>
+                <th><input type="date" name="endDate" value="${param.endDate}"></th>
+                <th><input type="time" name="startTime" value="${param.startTime}"></th>
+                <th><input type="time" name="endTime" value="${param.endTime}"></th>
             </tr>
         </table>
         <br>

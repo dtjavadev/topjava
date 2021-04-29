@@ -8,7 +8,10 @@ import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.DateTimeUtil;
+import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.ValidationUtil;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -25,33 +28,43 @@ public class MealRestController {
         this.mealService = mealService;
     }
 
-    public Meal create(Meal meal, Integer userId) {
+    public Meal create(Meal meal) {
         log.info("create {}", meal);
+        int userId = SecurityUtil.authUserId();
         return mealService.create(meal, userId);
     }
 
-    public Meal update(Meal meal, Integer id, Integer userId) {
+    public Meal update(Meal meal, Integer id) {
         log.info("update {}", meal);
+        int userId = SecurityUtil.authUserId();
         ValidationUtil.assureIdConsistent(meal, id);
         return mealService.update(meal, userId);
     }
 
-    public void delete(int id, Integer userId) {
+    public void delete(int id) {
         log.info("delete {}", id);
+        int userId = SecurityUtil.authUserId();
         mealService.delete(id, userId);
     }
 
-    public Meal get(int id, Integer userId) {
+    public Meal get(int id) {
         log.info("get {}", id);
+        int userId = SecurityUtil.authUserId();
         return mealService.get(id, userId);
     }
 
-    public Collection<Meal> getAll(Integer userId) {
+    public Collection<MealTo> getAll() {
         log.info("getAll");
-        return mealService.getAll(userId);
+        int userId = SecurityUtil.authUserId();
+        Collection<Meal> allMeal = mealService.getAll(userId);
+        return MealsUtil.getTos(allMeal, MealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 
-    public Collection<MealTo> filter(Integer userId, @Nullable LocalDate startDate, @Nullable LocalTime startTime, @Nullable LocalDate endDate, @Nullable LocalTime endTime) {
-        return mealService.getFiltered(userId, startDate, startTime, endDate, endTime);
+    public Collection<MealTo> filter(@Nullable LocalDate startDate, @Nullable LocalTime startTime, @Nullable LocalDate endDate, @Nullable LocalTime endTime) {
+        int userId = SecurityUtil.authUserId();
+        Collection<Meal> filteredByDate = mealService.getFiltered(userId, startDate, endDate);
+
+        return MealsUtil.filterByPredicate(filteredByDate, MealsUtil.DEFAULT_CALORIES_PER_DAY,
+                meal -> DateTimeUtil.isBetweenTime(meal.getDateTime().toLocalTime(), startTime, endTime));
     }
 }

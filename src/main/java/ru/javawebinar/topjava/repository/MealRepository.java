@@ -21,5 +21,5 @@ public interface MealRepository {
     // ORDERED dateTime desc
     Collection<Meal> getAll(Integer userId);
 
-    Collection<MealTo> getFiltered(Integer userId, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime);
+    Collection<Meal> getFiltered(Integer userId, LocalDate startDate, LocalDate endDate);
 }

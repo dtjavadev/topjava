@@ -21,61 +21,50 @@ import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryMealRepository implements MealRepository {
-    private final Map<Integer, Meal> repository = new ConcurrentHashMap<>();
+    private final Map<Integer, ConcurrentHashMap<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
         MealsUtil.meals.forEach(meal -> save(meal, 1));
-        repository.values().forEach(meal -> meal.setUserId(1));
     }
 
     @Override
     public Meal save(Meal meal, Integer userId) {
+        ConcurrentHashMap<Integer, Meal> map = repository.computeIfAbsent(userId, id -> new ConcurrentHashMap<>());
+
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            repository.put(meal.getId(), meal);
+            map.put(meal.getId(), meal);
+            repository.put(userId, map);
             return meal;
         }
 
-        if (!meal.getUserId().equals(userId)) {
-            return null;
-        }
-
         // handle case: update, but not present in storage
-        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        return map.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
     @Override
     public boolean delete(int id, Integer userId) {
-        if (!repository.get(id).getUserId().equals(userId)) {
-            return false;
-        }
-        return repository.remove(id) != null;
+        ConcurrentHashMap<Integer, Meal> meals = repository.get(userId);
+        return meals.remove(id) != null;
     }
 
     @Override
     public Meal get(int id, Integer userId) {
-        if (!repository.get(id).getUserId().equals(userId)) {
-            return null;
-        }
-        return repository.get(id);
+        ConcurrentHashMap<Integer, Meal> meals = repository.get(userId);
+        return meals.get(id);
     }
 
     @Override
     public Collection<Meal> getAll(Integer userId) {
-        return repository.values().stream().filter(meal -> meal.getUserId().equals(userId)).sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
+        ConcurrentHashMap<Integer, Meal> meals = repository.computeIfAbsent(userId, id -> new ConcurrentHashMap<>());
+        return MealsUtil.getFilteredByPredicate(meals.values(), meal -> DateTimeUtil.isBetweenDate(meal.getDateTime().toLocalDate(), LocalDate.MIN, LocalDate.MAX));
     }
 
     @Override
-    public Collection<MealTo> getFiltered(Integer userId, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        List<Meal> filteredMeal = repository.values().stream()
-                .filter(meal -> meal.getUserId().equals(userId))
-                .filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalDate(), startDate, endDate))
-                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                .collect(Collectors.toList());
-
-        return MealsUtil.filterByPredicate(filteredMeal, MealsUtil.DEFAULT_CALORIES_PER_DAY,
-                meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime));
+    public Collection<Meal> getFiltered(Integer userId, LocalDate startDate, LocalDate endDate) {
+        ConcurrentHashMap<Integer, Meal> meals = repository.get(userId);
+        return MealsUtil.getFilteredByPredicate(meals.values(), meal -> DateTimeUtil.isBetweenDate(meal.getDateTime().toLocalDate(), startDate, endDate));
     }
 }
 
