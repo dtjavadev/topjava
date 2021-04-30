@@ -50,8 +50,9 @@ public class MealsUtil {
     }
 
     public static List<Meal> getFilteredByPredicate(Collection<Meal> meals, Predicate<Meal> filter) {
-        return meals.stream().filter(filter)
-                .sorted(Comparator.comparing(Meal::getDateTime)
-                        .reversed()).collect(Collectors.toList());
+        return meals.stream()
+                .filter(filter)
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList());
     }
 }

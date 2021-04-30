@@ -35,7 +35,6 @@ public class InMemoryMealRepository implements MealRepository {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             map.put(meal.getId(), meal);
-            repository.put(userId, map);
             return meal;
         }
 
@@ -45,25 +44,25 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public boolean delete(int id, Integer userId) {
-        ConcurrentHashMap<Integer, Meal> meals = repository.get(userId);
+        ConcurrentHashMap<Integer, Meal> meals = repository.computeIfAbsent(userId, uid -> new ConcurrentHashMap<>());
         return meals.remove(id) != null;
     }
 
     @Override
     public Meal get(int id, Integer userId) {
-        ConcurrentHashMap<Integer, Meal> meals = repository.get(userId);
+        ConcurrentHashMap<Integer, Meal> meals = repository.computeIfAbsent(userId, uid -> new ConcurrentHashMap<>());
         return meals.get(id);
     }
 
     @Override
     public Collection<Meal> getAll(Integer userId) {
-        ConcurrentHashMap<Integer, Meal> meals = repository.computeIfAbsent(userId, id -> new ConcurrentHashMap<>());
-        return MealsUtil.getFilteredByPredicate(meals.values(), meal -> DateTimeUtil.isBetweenDate(meal.getDateTime().toLocalDate(), LocalDate.MIN, LocalDate.MAX));
+        ConcurrentHashMap<Integer, Meal> meals = repository.computeIfAbsent(userId, uid -> new ConcurrentHashMap<>());
+        return MealsUtil.getFilteredByPredicate(meals.values(), meal -> true);
     }
 
     @Override
     public Collection<Meal> getFiltered(Integer userId, LocalDate startDate, LocalDate endDate) {
-        ConcurrentHashMap<Integer, Meal> meals = repository.get(userId);
+        ConcurrentHashMap<Integer, Meal> meals = repository.computeIfAbsent(userId, uid -> new ConcurrentHashMap<>());
         return MealsUtil.getFilteredByPredicate(meals.values(), meal -> DateTimeUtil.isBetweenDate(meal.getDateTime().toLocalDate(), startDate, endDate));
     }
 }
