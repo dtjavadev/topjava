@@ -20,18 +20,18 @@ public class MealTestData {
     public static final LocalDate START_DATE = LocalDate.parse("2020-01-31", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     public static final LocalDate END_DATE = LocalDate.parse("2020-02-31", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-    public static final List<Meal> userMeals = Arrays.asList(
-            new Meal(100008, LocalDateTime.parse("2020-01-31 20:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "Ужин", 410),
-            new Meal(100007, LocalDateTime.parse("2020-01-31 13:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "Обед", 500),
-            new Meal(100006, LocalDateTime.parse("2020-01-31 10:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "Завтрак", 1000),
-            new Meal(100005, LocalDateTime.parse("2020-01-31 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "Еда на пограничное значение", 100),
-            new Meal(100004, LocalDateTime.parse("2020-01-30 20:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "Ужин", 500),
-            new Meal(100003, LocalDateTime.parse("2020-01-30 13:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "Обед", 1000),
-            new Meal(100002, LocalDateTime.parse("2020-01-30 10:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "Завтрак", 500)
-    );
+    public static final Meal meal1 = new Meal(100002, LocalDateTime.parse("2020-01-30 10:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "Завтрак", 500);
+    public static final Meal meal2 = new Meal(100003, LocalDateTime.parse("2020-01-30 13:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "Обед", 1000);
+    public static final Meal meal3 = new Meal(100004, LocalDateTime.parse("2020-01-30 20:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "Ужин", 500);
+    public static final Meal meal4 = new Meal(100005, LocalDateTime.parse("2020-01-31 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "Еда на пограничное значение", 100);
+    public static final Meal meal5 = new Meal(100006, LocalDateTime.parse("2020-01-31 10:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "Завтрак", 1000);
+    public static final Meal meal6 = new Meal(100007, LocalDateTime.parse("2020-01-31 13:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "Обед", 500);
+    public static final Meal meal7 = new Meal(100008, LocalDateTime.parse("2020-01-31 20:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "Ужин", 410);
+
+    public static List<Meal> meals = Arrays.asList(meal7, meal6, meal5, meal4, meal3, meal2, meal1);
 
     public static List<Meal> getFiltered() {
-        return userMeals.stream()
+        return meals.stream()
                 .filter(meal -> Util.isBetweenHalfOpen(meal.getDateTime().toLocalDate(), START_DATE, END_DATE))
                 .collect(Collectors.toList());
     }
@@ -42,7 +42,7 @@ public class MealTestData {
     }
 
     public static Meal getUpdated() {
-        Meal updated = new Meal(userMeals.get(6));
+        Meal updated = new Meal(meal1);
         updated.setDateTime(LocalDateTime.parse("2021-01-01 20:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         updated.setDescription("Update");
         updated.setCalories(660);

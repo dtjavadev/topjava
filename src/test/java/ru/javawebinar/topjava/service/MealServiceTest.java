@@ -36,7 +36,7 @@ public class MealServiceTest {
     @Test
     public void get() {
         Meal meal = service.get(MealTestData.MEAL_ID, MealTestData.USER_ID);
-        MealTestData.assertMatch(meal, MealTestData.userMeals.get(6));
+        MealTestData.assertMatch(meal, MealTestData.meal1);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class MealServiceTest {
     @Test
     public void getAll() {
         List<Meal> list = service.getAll(MealTestData.USER_ID);
-        MealTestData.assertMatch(list, MealTestData.userMeals);
+        MealTestData.assertMatch(list, MealTestData.meals);
     }
 
     @Test
