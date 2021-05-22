@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava;
 
-import org.junit.AssumptionViolatedException;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
@@ -14,29 +13,11 @@ public class TestUtil {
 
     private static final StringBuilder results = new StringBuilder();
 
-    private static String info(Description description, String status, long nanos) {
-        return String.format("Test %s %s, spent %d milliseconds",
-                description.getMethodName(), status, TimeUnit.NANOSECONDS.toMillis(nanos));
-    }
-
     public static final Stopwatch STOPWATCH = new Stopwatch() {
         @Override
-        protected void succeeded(long nanos, Description description) {
-            String result = info(description, "succeeded", nanos);
-            results.append(result).append('\n');
-            log.info(result + "\n");
-        }
-
-        @Override
-        protected void failed(long nanos, Throwable e, Description description) {
-            String result = info(description, "failed", nanos);
-            results.append(result).append('\n');
-            log.info(result + "\n");
-        }
-
-        @Override
-        protected void skipped(long nanos, AssumptionViolatedException e, Description description) {
-            String result = info(description, "skipped", nanos);
+        protected void finished(long nanos, Description description) {
+            String result = String.format("Test %s, spent %d milliseconds",
+                    description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
             results.append(result).append('\n');
             log.info(result + "\n");
         }
