@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.util;
 
+import org.springframework.lang.NonNull;
+import org.springframework.util.ClassUtils;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 
@@ -41,4 +43,5 @@ public class MealsUtil {
     private static MealTo createTo(Meal meal, boolean excess) {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
+
 }
