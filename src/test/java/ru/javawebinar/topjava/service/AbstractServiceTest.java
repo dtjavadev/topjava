@@ -41,9 +41,6 @@ public abstract class AbstractServiceTest {
         }
     };
 
-    @Autowired
-    private MealService service;
-
     @AfterClass
     public static void printResult() {
         log.info("\n---------------------------------" +
