@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -57,11 +58,6 @@ public class DataJpaMealRepository implements MealRepository {
 
     @Override
     public Meal getMealWithUser(int id, int userId) {
-        Meal meal = get(id, userId);
-        if (meal == null) {
-            return null;
-        }
-        meal.setUser(crudUserRepository.getOne(userId));
-        return meal;
+        return crudMealRepository.getMealWithUser(id, userId);
     }
 }
