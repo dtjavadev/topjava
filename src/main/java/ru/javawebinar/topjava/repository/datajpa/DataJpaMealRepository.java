@@ -55,7 +55,7 @@ public class DataJpaMealRepository implements MealRepository {
         return crudMealRepository.getBetweenHalfOpen(startDateTime, endDateTime, userId);
     }
 
-    @Transactional
+    @Override
     public Meal getMealWithUser(int id, int userId) {
         Meal meal = get(id, userId);
         if (meal == null) {

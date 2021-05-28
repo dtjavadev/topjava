@@ -46,7 +46,7 @@ public class DataJpaUserRepository implements UserRepository {
         return crudUserRepository.findAll(SORT_NAME_EMAIL);
     }
 
-    @Transactional
+    @Override
     public User getUserWithMeals(int id) {
         User user = get(id);
         if(user == null) {
