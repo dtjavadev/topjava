@@ -15,7 +15,7 @@
         <java.version>15</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
+        <javax.validation.version>2.0.1.Final</javax.validation.version>
         <spring.version>5.3.4</spring.version>
         <spring-data-jpa.version>2.4.5</spring-data-jpa.version>
         <tomcat.version>9.0.43</tomcat.version>
@@ -106,6 +106,12 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax.validation.version}</version>
+        </dependency>
+
         <!-- Logging with SLF4J & LogBack -->
         <dependency>
             <groupId>org.slf4j</groupId>
