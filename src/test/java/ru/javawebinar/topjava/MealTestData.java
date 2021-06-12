@@ -31,6 +31,8 @@ public class MealTestData {
 
     public static final List<Meal> meals = List.of(meal7, meal6, meal5, meal4, meal3, meal2, meal1);
     public static final List<MealTo> mealsTo = MealsUtil.getTos(meals, MealsUtil.DEFAULT_CALORIES_PER_DAY);
+    public static final List<MealTo> filteredMealsTo = MealsUtil.getTos(List.of(meal3, meal2, meal1), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+
 
     public static Meal getNew() {
         return new Meal(null, of(2020, Month.FEBRUARY, 1, 18, 0), "Созданный ужин", 300);
