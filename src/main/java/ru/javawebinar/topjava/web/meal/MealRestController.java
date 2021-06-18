@@ -68,9 +68,6 @@ public class MealRestController extends AbstractMealController {
     public List<MealTo> getFiltered(@RequestParam(required = false) LocalDate startDate, @RequestParam(required = false) LocalTime startTime,
                                     @RequestParam(required = false) LocalDate endDate, @RequestParam(required = false) LocalTime endTime) {
 
-        return super.getBetween(startDate != null ? startDate : DateTimeUtil.MIN_DATE.toLocalDate(),
-                startTime != null ? startTime : DateTimeUtil.MIN_DATE.toLocalTime(),
-                endDate != null ? endDate : DateTimeUtil.MAX_DATE.toLocalDate(),
-                endTime != null ? endTime : DateTimeUtil.MAX_DATE.toLocalTime());
+        return super.getBetween(startDate, startTime, endDate, endTime);
     }
 }
