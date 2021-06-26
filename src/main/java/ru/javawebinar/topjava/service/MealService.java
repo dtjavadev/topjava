@@ -45,20 +45,9 @@ public class MealService {
         checkNotFoundWithId(repository.save(meal, userId), meal.id());
     }
 
-    public void update(MealTo mealTo, int userId) {
-        Meal meal = repository.get(mealTo.getId(), userId);
-        Meal updatedMeal = MealsUtil.updateFromTo(meal, mealTo);
-        repository.save(updatedMeal, userId);
-    }
-
     public Meal create(Meal meal, int userId) {
         Assert.notNull(meal, "meal must not be null");
         return repository.save(meal, userId);
-    }
-
-    public void create(MealTo mealTo, int userId) {
-        Assert.notNull(mealTo, "meal must not be null");
-        create(MealsUtil.createNewFromTo(mealTo), userId);
     }
 
     public Meal getWithUser(int id, int userId) {
